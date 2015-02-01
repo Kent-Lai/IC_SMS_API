@@ -1,0 +1,7 @@
+{
+  "name": "sms",
+  "version": "1.0.0",
+  "dependencies": {
+    "twilio": "^1.10.0"
+  }
+}
