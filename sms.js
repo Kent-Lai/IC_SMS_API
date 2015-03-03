@@ -12,7 +12,6 @@ exports.sendMessage = function(dst_num, text, media_urls)
 {
 	var msg = {
 		from : public_account.num,
-		to : dst_num,
 		body : text
 	};
 
@@ -21,18 +20,42 @@ exports.sendMessage = function(dst_num, text, media_urls)
 		msg.mediaUrl = media_urls;
 	}
 
-	public_client.sendMessage(msg, function(err, MIR)
+	if(typeof dst_num === "string")
+	{
+		msg.to = dst_num;
+		public_client.sendMessage(msg, function(err, MIR)
+			{
+				if(err)
+				{
+					LOG.warn(err.message);
+				}
+				else
+				{
+					LOG.warn(MIR);
+				}
+			}
+		);
+	}
+
+	if(Array.isArray(dst_num))
+	{
+		for(var i = 0; i < dst_num.length; i++)
 		{
-			if(err)
-			{
-				LOG.warn(err.message);
-			}
-			else
-			{
-				LOG.warn(MIR);
-			}
+			msg.to = dst_num[i];
+			public_client.sendMessage(msg, function(err, MIR)
+				{
+					if(err)
+					{
+						LOG.warn(err.message);
+					}
+					else
+					{
+						LOG.warn(MIR);
+					}
+				}
+			);
 		}
-	);
+	}
 }
 
 exports.listMessages = function(list_filter, cb)
